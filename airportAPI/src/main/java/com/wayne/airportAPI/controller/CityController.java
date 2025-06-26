@@ -1,7 +1,7 @@
-package com.example.airportapi.controller;
+package com.wayne.airportAPI.controller;
 
-import com.example.airportapi.model.City;
-import com.example.airportapi.service.CityService;
+import com.wayne.airportAPI.model.City;
+import com.wayne.airportAPI.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

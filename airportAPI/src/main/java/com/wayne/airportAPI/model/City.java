@@ -1,4 +1,4 @@
-package com.example.airportapi.model;
+package com.wayne.airportAPI.model;
 
 import jakarta.persistence.*;
 import java.util.Set;

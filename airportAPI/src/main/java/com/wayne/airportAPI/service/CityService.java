@@ -1,7 +1,7 @@
 package com.wayne.airportAPI.service;
 
-import com.example.airportapi.model.City;
-import com.example.airportapi.repository.CityRepository;
+import com.wayne.airportAPI.model.City;
+import com.wayne.airportAPI.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
