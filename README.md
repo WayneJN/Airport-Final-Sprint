@@ -42,12 +42,11 @@ It supports all standard HTTP verbs (`GET`, `POST`, `PUT`, `DELETE`) and is back
 - MySQL (or use H2 for testing)
 - (Optional) Docker for containerization
 
-### Run Locally
+## Run Locally
 
-```bash
-./mvnw spring-boot:run
-
-The API will start at http://localhost:8080
+ - bash
+ - ./mvnw spring-boot:run
+ - The API will start at http://localhost:8080
 
 ## 🧪 Testing
 
@@ -57,7 +56,7 @@ Tests include:
 - Repository layer tests with @DataJpaTest
 - CLI integration tested separately in companion repo
 
-Run all tests:
+## Run all tests:
 
 ./mvnw test
 
