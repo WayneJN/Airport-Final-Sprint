@@ -63,7 +63,7 @@ Tests include:
 
 ## 🌐 Companion CLI App
 
-The CLI frontend that consumes this API can be found here: 👉 airport-CLI GitHub Repository
+The CLI frontend that consumes this API can be found here: 👉 [airport-CLI GitHub Repository](https://github.com/WayneJN/Spring-Sprint-1-airport-CLI)
 
 ## 🛠 Technologies
 
