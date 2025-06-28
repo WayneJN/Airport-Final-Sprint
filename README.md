@@ -78,6 +78,6 @@ Java 17
 ## 📽️ Demo Video
 A recorded demo video is available in the submission link or docs/ folder.
 
-👥 Team
+## 👥 Team
 Wayne N.
 
