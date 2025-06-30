@@ -1,0 +1,1 @@
+Added video folder. Same videos can be found within CLI directory under same name. Initial difficulty on file upload, too large. Had to splice, complete audio clippings, change resolution and compress.
