@@ -5,12 +5,14 @@ import com.wayne.airportAPI.service.AircraftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/aircraft")
 @CrossOrigin
 public class AircraftController {
+
     @Autowired
     private AircraftService aircraftService;
 
@@ -25,7 +27,7 @@ public class AircraftController {
     }
 
     @PostMapping
-    public Aircraft createAircraft(@RequestBody Aircraft aircraft) {
+    public Aircraft createAircraft(@Valid @RequestBody Aircraft aircraft) {
         return aircraftService.createAircraft(aircraft);
     }
 

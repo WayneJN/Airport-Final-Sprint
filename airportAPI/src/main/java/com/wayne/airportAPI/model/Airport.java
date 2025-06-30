@@ -1,11 +1,17 @@
 package com.wayne.airportAPI.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 public class Airport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,22 +23,12 @@ public class Airport {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @ManyToMany(mappedBy = "airports")
+    @ManyToMany(mappedBy = "airports", cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
+    @JsonIgnore
     private Set<Aircraft> aircraft;
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
-
-    public City getCity() { return city; }
-    public void setCity(City city) { this.city = city; }
-
-    public Set<Aircraft> getAircraft() { return aircraft; }
-    public void setAircraft(Set<Aircraft> aircraft) { this.aircraft = aircraft; }
 }

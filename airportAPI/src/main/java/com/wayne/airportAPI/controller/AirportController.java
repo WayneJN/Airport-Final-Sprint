@@ -1,10 +1,12 @@
 package com.wayne.airportAPI.controller;
 
 import com.wayne.airportAPI.model.Airport;
+import com.wayne.airportAPI.model.Passenger;
 import com.wayne.airportAPI.service.AirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +23,7 @@ public class AirportController {
     }
 
     @PostMapping
-    public Airport createAirport(@RequestBody Airport airport) {
+    public Airport createAirport(@Valid @RequestBody Airport airport) {
         return airportService.createAirport(airport);
     }
 
@@ -33,5 +35,10 @@ public class AirportController {
     @DeleteMapping("/{id}")
     public void deleteAirport(@PathVariable Long id) {
         airportService.deleteAirport(id);
+    }
+
+    @GetMapping("/{id}/passengers")
+    public List<Passenger> getPassengersByAirport(@PathVariable Long id) {
+        return airportService.getPassengersByAirportId(id);
     }
 }

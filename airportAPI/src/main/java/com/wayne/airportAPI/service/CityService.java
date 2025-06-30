@@ -9,6 +9,7 @@ import java.util.List;
 
 @Service
 public class CityService {
+
     @Autowired
     private CityRepository cityRepo;
 
@@ -16,11 +17,19 @@ public class CityService {
         return cityRepo.findAll();
     }
 
-    public City createCity(City c) {
-        return cityRepo.save(c);
+    public City getCityById(Long id) {
+        return cityRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("City not found with ID: " + id));
     }
 
-    public City getCityById(Long id) {
-        return cityRepo.findById(id).orElseThrow();
+    public City createCity(City city) {
+        return cityRepo.save(city);
+    }
+
+    public void deleteCity(Long id) {
+        if (!cityRepo.existsById(id)) {
+            throw new RuntimeException("Cannot delete — city not found with ID: " + id);
+        }
+        cityRepo.deleteById(id);
     }
 }
