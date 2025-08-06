@@ -38,6 +38,16 @@ public class Flight {
     @NotNull(message = "Destination airport is required")
     private Airport destinationAirport;
 
+    @ManyToOne
+    @JoinColumn(name = "airline_id")
+    @NotNull(message = "Airline is required")
+    private Airline airline;
+
+    @ManyToOne
+    @JoinColumn(name = "gate_id")
+    @NotNull(message = "Gate is required")
+    private Gate gate;
+
     @ManyToMany
     @JoinTable(
             name = "flight_passenger",
@@ -66,6 +76,12 @@ public class Flight {
 
     public Airport getDestinationAirport() { return destinationAirport; }
     public void setDestinationAirport(Airport destinationAirport) { this.destinationAirport = destinationAirport; }
+
+    public Airline getAirline() { return airline; }
+    public void setAirline(Airline airline) { this.airline = airline; }
+
+    public Gate getGate() { return gate; }
+    public void setGate(Gate gate) { this.gate = gate; }
 
     public Set<Passenger> getPassengers() { return passengers; }
     public void setPassengers(Set<Passenger> passengers) { this.passengers = passengers; }

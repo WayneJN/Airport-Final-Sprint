@@ -5,12 +5,10 @@ import com.wayne.airportAPI.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/flights")
-@CrossOrigin
+@RequestMapping("/api/flights")
 public class FlightController {
 
     @Autowired
@@ -27,7 +25,7 @@ public class FlightController {
     }
 
     @PostMapping
-    public Flight createFlight(@Valid @RequestBody Flight flight) {
+    public Flight createFlight(@RequestBody Flight flight) {
         return flightService.createFlight(flight);
     }
 
@@ -36,10 +34,22 @@ public class FlightController {
         flightService.deleteFlight(id);
     }
 
-    @GetMapping(params = {"origin", "destination"})
-    public List<Flight> getFlightsBetweenAirports(
-            @RequestParam Long origin,
-            @RequestParam Long destination) {
-        return flightService.getFlightsBetweenAirports(origin, destination);
+    @GetMapping("/search")
+    public List<Flight> getFlightsBetweenAirports(@RequestParam Long originId,
+                                                  @RequestParam Long destinationId) {
+        return flightService.getFlightsBetweenAirports(originId, destinationId);
     }
+
+    @PostMapping
+    public FlightDTO createFlight(@Valid @RequestBody FlightDTO flightDTO) {
+        Flight flight = flightService.createFlightFromDTO(flightDTO);
+        return flightService.toDTO(flight);
+    }
+
+    @GetMapping("/{id}")
+    public FlightDTO getFlightById(@PathVariable Long id) {
+        Flight flight = flightService.getFlightById(id);
+        return flightService.toDTO(flight);
+    }
+
 }
