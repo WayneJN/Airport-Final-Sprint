@@ -29,9 +29,10 @@ public class PassengerController {
     }
 
     @PostMapping
-    public PassengerDTO createPassenger(@Valid @RequestBody PassengerDTO passengerDTO) {
-        Passenger passenger = passengerService.createPassengerFromDTO(passengerDTO);
-        return passengerService.toDTO(passenger);
+    public PassengerDTO createPassenger(@Valid @RequestBody PassengerDTO dto) {
+        Passenger passenger = passengerService.fromDTO(dto);
+        Passenger saved = passengerService.createPassenger(passenger);
+        return passengerService.toDTO(saved);
     }
 
     @DeleteMapping("/{id}")
