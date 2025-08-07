@@ -1,12 +1,14 @@
 package com.wayne.airportAPI.service;
 
 import com.wayne.airportAPI.dto.FlightDTO;
+import com.wayne.airportAPI.dto.FlightResponseDTO;
 import com.wayne.airportAPI.model.*;
 import com.wayne.airportAPI.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,13 +33,15 @@ public class FlightService {
     @Autowired
     private GateRepository gateRepo;
 
-    public List<Flight> getAllFlights() {
-        return flightRepo.findAll();
+    public List<FlightResponseDTO> getAllFlights() {
+        return flightRepo.findAll().stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    public Flight getFlightById(Long id) {
+    public Optional<FlightResponseDTO> getFlightById(Long id) {
         return flightRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Flight not found"));
+                .map(this::toResponseDTO);
     }
 
     public Flight createFlight(Flight flight) {
@@ -107,17 +111,17 @@ public class FlightService {
         return flight;
     }
 
-    public FlightDTO toDTO(Flight flight) {
-        return FlightDTO.builder()
+    public FlightResponseDTO toResponseDTO(Flight flight) {
+        return FlightResponseDTO.builder()
                 .id(flight.getId())
                 .flightNumber(flight.getFlightNumber())
                 .departureTime(flight.getDepartureTime())
                 .arrivalTime(flight.getArrivalTime())
-                .aircraftId(flight.getAircraft().getId())
-                .originAirportId(flight.getOriginAirport().getId())
-                .destinationAirportId(flight.getDestinationAirport().getId())
-                .airlineId(flight.getAirline().getId())
-                .gateId(flight.getGate().getId())
+                .aircraftModel(flight.getAircraft().getModel())
+                .originAirportCode(flight.getOriginAirport().getCode())
+                .destinationAirportCode(flight.getDestinationAirport().getCode())
+                .airlineName(flight.getAirline().getName())
+                .gateNumber(flight.getGate().getGateNumber())
                 .passengerIds(flight.getPassengers().stream()
                         .map(Passenger::getId)
                         .collect(Collectors.toSet()))

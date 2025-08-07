@@ -1,5 +1,6 @@
 package com.wayne.airportAPI.service;
 
+import com.wayne.airportAPI.dto.AirportDTO;
 import com.wayne.airportAPI.model.Airport;
 import com.wayne.airportAPI.model.City;
 import com.wayne.airportAPI.model.Passenger;
@@ -34,11 +35,7 @@ public class AirportService {
         City city = cityRepository.findById(cityId)
                 .orElseThrow(() -> new RuntimeException("City not found"));
         airport.setCity(city);
-        System.out.println("📦 Received airport: " + airport);
-        System.out.println("🌆 City: " + (airport.getCity() != null ? airport.getCity().getId() : "null"));
-
         return airportRepository.save(airport);
-
     }
 
     public void deleteAirport(Long id) {
@@ -50,6 +47,37 @@ public class AirportService {
         return airport.getAircraft().stream()
                 .flatMap(a -> a.getPassengers().stream())
                 .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public AirportDTO toDTO(Airport airport) {
+        return AirportDTO.builder()
+                .id(airport.getId())
+                .name(airport.getName())
+                .code(airport.getCode())
+                .cityName(airport.getCity() != null ? airport.getCity().getName() : null)
+                .cityState(airport.getCity() != null ? airport.getCity().getState() : null)
+                .build();
+    }
+
+    public Airport fromDTO(AirportDTO dto) {
+        City city = cityRepository.findAll().stream()
+                .filter(c -> c.getName().equalsIgnoreCase(dto.getCityName()) &&
+                        c.getState().equalsIgnoreCase(dto.getCityState()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("City not found for name/state"));
+
+        return Airport.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .code(dto.getCode())
+                .city(city)
+                .build();
+    }
+
+    public List<AirportDTO> getAllAirportDTOs() {
+        return airportRepository.findAll().stream()
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 }

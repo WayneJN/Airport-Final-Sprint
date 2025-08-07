@@ -1,35 +1,41 @@
 package com.wayne.airportAPI.controller;
 
+import com.wayne.airportAPI.dto.AirportDTO;
 import com.wayne.airportAPI.model.Airport;
 import com.wayne.airportAPI.model.Passenger;
 import com.wayne.airportAPI.service.AirportService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/airports")
+@RequestMapping("/api/airports")
 @CrossOrigin
+@RequiredArgsConstructor
 public class AirportController {
 
-    @Autowired
-    private AirportService airportService;
+    private final AirportService airportService;
 
     @GetMapping
-    public List<Airport> getAllAirports() {
-        return airportService.getAllAirports();
+    public List<AirportDTO> getAllAirports() {
+        return airportService.getAllAirports().stream()
+                .map(airportService::toDTO)
+                .toList();
     }
 
     @PostMapping
-    public Airport createAirport(@Valid @RequestBody Airport airport) {
-        return airportService.createAirport(airport);
+    public AirportDTO createAirport(@Valid @RequestBody AirportDTO dto) {
+        Airport airport = airportService.fromDTO(dto);
+        Airport saved = airportService.createAirport(airport);
+        return airportService.toDTO(saved);
     }
 
     @GetMapping("/{id}")
-    public Airport getAirport(@PathVariable Long id) {
-        return airportService.getAirportById(id);
+    public AirportDTO getAirport(@PathVariable Long id) {
+        Airport airport = airportService.getAirportById(id);
+        return airportService.toDTO(airport);
     }
 
     @DeleteMapping("/{id}")

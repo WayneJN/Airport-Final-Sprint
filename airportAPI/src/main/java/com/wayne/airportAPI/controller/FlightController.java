@@ -1,32 +1,37 @@
 package com.wayne.airportAPI.controller;
 
+import com.wayne.airportAPI.dto.FlightDTO;
+import com.wayne.airportAPI.dto.FlightResponseDTO;
 import com.wayne.airportAPI.model.Flight;
 import com.wayne.airportAPI.service.FlightService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/flights")
+@RequiredArgsConstructor
 public class FlightController {
 
-    @Autowired
-    private FlightService flightService;
+    private final FlightService flightService;
 
     @GetMapping
-    public List<Flight> getAllFlights() {
+    public List<FlightResponseDTO> getAllFlights() {
         return flightService.getAllFlights();
     }
 
     @GetMapping("/{id}")
-    public Flight getFlightById(@PathVariable Long id) {
-        return flightService.getFlightById(id);
+    public FlightResponseDTO getFlightById(@PathVariable Long id) {
+        return flightService.getFlightById(id)
+                .orElseThrow(() -> new RuntimeException("Flight not found"));
     }
 
     @PostMapping
-    public Flight createFlight(@RequestBody Flight flight) {
-        return flightService.createFlight(flight);
+    public FlightResponseDTO createFlight(@Valid @RequestBody FlightDTO flightDTO) {
+        Flight flight = flightService.createFlightFromDTO(flightDTO);
+        return flightService.toResponseDTO(flight);
     }
 
     @DeleteMapping("/{id}")
@@ -35,21 +40,10 @@ public class FlightController {
     }
 
     @GetMapping("/search")
-    public List<Flight> getFlightsBetweenAirports(@RequestParam Long originId,
-                                                  @RequestParam Long destinationId) {
-        return flightService.getFlightsBetweenAirports(originId, destinationId);
+    public List<FlightResponseDTO> getFlightsBetweenAirports(@RequestParam Long originId,
+                                                             @RequestParam Long destinationId) {
+        return flightService.getFlightsBetweenAirports(originId, destinationId).stream()
+                .map(flightService::toResponseDTO)
+                .toList();
     }
-
-    @PostMapping
-    public FlightDTO createFlight(@Valid @RequestBody FlightDTO flightDTO) {
-        Flight flight = flightService.createFlightFromDTO(flightDTO);
-        return flightService.toDTO(flight);
-    }
-
-    @GetMapping("/{id}")
-    public FlightDTO getFlightById(@PathVariable Long id) {
-        Flight flight = flightService.getFlightById(id);
-        return flightService.toDTO(flight);
-    }
-
 }
