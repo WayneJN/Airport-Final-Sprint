@@ -1,5 +1,6 @@
 package com.wayne.airportAPI.service;
 
+import com.wayne.airportAPI.dto.AircraftDTO;
 import com.wayne.airportAPI.model.Aircraft;
 import com.wayne.airportAPI.model.Airport;
 import com.wayne.airportAPI.model.Passenger;
@@ -30,7 +31,8 @@ public class AircraftService {
     }
 
     public Aircraft getAircraftById(Long id) {
-        return aircraftRepo.findById(id).orElseThrow();
+        return aircraftRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aircraft not found"));
     }
 
     public Aircraft createAircraft(Aircraft aircraft) {
@@ -48,6 +50,30 @@ public class AircraftService {
         aircraft.setPassengers(resolvedPassengers);
 
         return aircraftRepo.save(aircraft);
+    }
+
+    public AircraftDTO toDTO(Aircraft aircraft) {
+        return AircraftDTO.builder()
+                .id(aircraft.getId())
+                .model(aircraft.getModel())
+                .manufacturer(aircraft.getManufacturer())
+                .capacity(aircraft.getCapacity())
+                .build();
+    }
+
+    public Aircraft fromDTO(AircraftDTO dto) {
+        return Aircraft.builder()
+                .id(dto.getId())
+                .model(dto.getModel())
+                .manufacturer(dto.getManufacturer())
+                .capacity(dto.getCapacity())
+                .build();
+    }
+
+    public List<AircraftDTO> getAllAircraftDTOs() {
+        return aircraftRepo.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     public void deleteAircraft(Long id) {

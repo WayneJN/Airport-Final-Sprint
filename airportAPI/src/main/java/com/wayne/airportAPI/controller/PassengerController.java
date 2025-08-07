@@ -1,6 +1,6 @@
 package com.wayne.airportAPI.controller;
 
-import com.wayne.airportAPI.model.Aircraft;
+import com.wayne.airportAPI.dto.PassengerDTO;
 import com.wayne.airportAPI.model.Passenger;
 import com.wayne.airportAPI.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/passengers")
@@ -19,27 +18,24 @@ public class PassengerController {
     private PassengerService passengerService;
 
     @GetMapping
-    public List<Passenger> getAllPassengers() {
-        return passengerService.getAllPassengers();
+    public List<PassengerDTO> getAllPassengers() {
+        return passengerService.getAllPassengerDTOs();
     }
 
     @GetMapping("/{id}")
-    public Passenger getPassengerById(@PathVariable Long id) {
-        return passengerService.getPassengerById(id);
+    public PassengerDTO getPassengerById(@PathVariable Long id) {
+        Passenger passenger = passengerService.getPassengerById(id);
+        return passengerService.toDTO(passenger);
     }
 
     @PostMapping
-    public Passenger createPassenger(@Valid @RequestBody Passenger passenger) {
-        return passengerService.createPassenger(passenger);
+    public PassengerDTO createPassenger(@Valid @RequestBody PassengerDTO passengerDTO) {
+        Passenger passenger = passengerService.createPassengerFromDTO(passengerDTO);
+        return passengerService.toDTO(passenger);
     }
 
     @DeleteMapping("/{id}")
     public void deletePassenger(@PathVariable Long id) {
         passengerService.deletePassenger(id);
-    }
-
-    @GetMapping("/{id}/aircraft")
-    public Set<Aircraft> getAircraftByPassenger(@PathVariable Long id) {
-        return passengerService.getPassengerById(id).getAircraft();
     }
 }

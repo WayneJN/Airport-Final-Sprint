@@ -5,12 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
-@Table(name = "passenger") // Ensures table name matches data.sql
+@Table(name = "passenger")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Passenger {
 
     @Id
@@ -29,6 +34,14 @@ public class Passenger {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @NotBlank(message = "Email is required")
+    @Column(name = "email")
+    private String email;
+
+    @NotBlank(message = "Passport number is required")
+    @Column(name = "passport_number")
+    private String passportNumber;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     @NotNull(message = "City is required")
@@ -37,25 +50,4 @@ public class Passenger {
     @ManyToMany(mappedBy = "passengers")
     @JsonBackReference(value = "aircraft-passenger")
     private Set<Aircraft> aircraft;
-
-    public Passenger() {}
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getFirstName() { return firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-
-    public String getLastName() { return lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
-
-    public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
-    public City getCity() { return city; }
-    public void setCity(City city) { this.city = city; }
-
-    public Set<Aircraft> getAircraft() { return aircraft; }
-    public void setAircraft(Set<Aircraft> aircraft) { this.aircraft = aircraft; }
 }

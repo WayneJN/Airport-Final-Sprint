@@ -1,31 +1,36 @@
 package com.wayne.airportAPI.controller;
 
-import com.wayne.airportAPI.model.Airport;
+import com.wayne.airportAPI.dto.CityDTO;
 import com.wayne.airportAPI.model.City;
+import com.wayne.airportAPI.model.Airport;
 import com.wayne.airportAPI.service.CityService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/cities")
+@RequestMapping("/api/cities")
 @CrossOrigin
+@RequiredArgsConstructor
 public class CityController {
 
-    @Autowired
-    private CityService cityService;
+    private final CityService cityService;
 
     @GetMapping
-    public List<City> getAllCities() {
-        return cityService.getAllCities();
+    public List<CityDTO> getAllCities() {
+        return cityService.getAllCities().stream()
+                .map(cityService::toDTO)
+                .toList();
     }
 
     @PostMapping
-    public City createCity(@Valid @RequestBody City city) {
-        return cityService.createCity(city);
+    public CityDTO createCity(@Valid @RequestBody CityDTO dto) {
+        City city = cityService.fromDTO(dto);
+        City saved = cityService.createCity(city);
+        return cityService.toDTO(saved);
     }
 
     @GetMapping("/{id}/airports")

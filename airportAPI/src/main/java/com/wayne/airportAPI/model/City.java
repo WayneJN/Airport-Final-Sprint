@@ -2,18 +2,18 @@ package com.wayne.airportAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
-@Setter
-@Getter
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class City {
 
@@ -33,11 +33,4 @@ public class City {
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Airport> airports;
-
-    public City() {}
-
-    public City(String name, String state) {
-        this.name = name;
-        this.state = state;
-    }
 }

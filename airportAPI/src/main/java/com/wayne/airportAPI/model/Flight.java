@@ -3,13 +3,22 @@ package com.wayne.airportAPI.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Flight {
+
+    @NotNull(message = "Flight number is required")
+    @Column(name = "flight_number", unique = true)
+    private String flightNumber;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,34 +64,4 @@ public class Flight {
             inverseJoinColumns = @JoinColumn(name = "passenger_id")
     )
     private Set<Passenger> passengers;
-
-    public Flight() {}
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public LocalDateTime getDepartureTime() { return departureTime; }
-    public void setDepartureTime(LocalDateTime departureTime) { this.departureTime = departureTime; }
-
-    public LocalDateTime getArrivalTime() { return arrivalTime; }
-    public void setArrivalTime(LocalDateTime arrivalTime) { this.arrivalTime = arrivalTime; }
-
-    public Aircraft getAircraft() { return aircraft; }
-    public void setAircraft(Aircraft aircraft) { this.aircraft = aircraft; }
-
-    public Airport getOriginAirport() { return originAirport; }
-    public void setOriginAirport(Airport originAirport) { this.originAirport = originAirport; }
-
-    public Airport getDestinationAirport() { return destinationAirport; }
-    public void setDestinationAirport(Airport destinationAirport) { this.destinationAirport = destinationAirport; }
-
-    public Airline getAirline() { return airline; }
-    public void setAirline(Airline airline) { this.airline = airline; }
-
-    public Gate getGate() { return gate; }
-    public void setGate(Gate gate) { this.gate = gate; }
-
-    public Set<Passenger> getPassengers() { return passengers; }
-    public void setPassengers(Set<Passenger> passengers) { this.passengers = passengers; }
 }
