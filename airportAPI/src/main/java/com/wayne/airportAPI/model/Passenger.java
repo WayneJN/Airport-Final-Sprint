@@ -44,7 +44,6 @@ public class Passenger {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
-    @NotNull(message = "City is required")
     private City city;
 
     @ManyToMany(mappedBy = "passengers")
