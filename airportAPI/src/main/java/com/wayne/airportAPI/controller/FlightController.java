@@ -46,4 +46,11 @@ public class FlightController {
                 .map(flightService::toResponseDTO)
                 .toList();
     }
+
+    @PutMapping("/{id}")
+    public FlightResponseDTO updateFlight(@PathVariable Long id, @Valid @RequestBody FlightDTO dto) {
+        Flight updated = flightService.updateFlightFromDTO(id, dto);
+        return flightService.toResponseDTO(updated);
+    }
+
 }

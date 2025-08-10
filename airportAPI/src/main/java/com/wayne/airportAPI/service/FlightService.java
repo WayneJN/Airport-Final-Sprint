@@ -127,4 +127,40 @@ public class FlightService {
                         .collect(Collectors.toSet()))
                 .build();
     }
+
+    public Flight updateFlightFromDTO(Long id, FlightDTO dto) {
+        Flight existing = flightRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Flight not found with ID: " + id));
+
+        existing.setFlightNumber(dto.getFlightNumber());
+        existing.setDepartureTime(dto.getDepartureTime());
+        existing.setArrivalTime(dto.getArrivalTime());
+
+        Aircraft aircraft = aircraftRepo.findById(dto.getAircraftId())
+                .orElseThrow(() -> new RuntimeException("Aircraft not found"));
+        Airport origin = airportRepo.findById(dto.getOriginAirportId())
+                .orElseThrow(() -> new RuntimeException("Origin airport not found"));
+        Airport destination = airportRepo.findById(dto.getDestinationAirportId())
+                .orElseThrow(() -> new RuntimeException("Destination airport not found"));
+        Airline airline = airlineRepo.findById(dto.getAirlineId())
+                .orElseThrow(() -> new RuntimeException("Airline not found"));
+        Gate gate = gateRepo.findById(dto.getGateId())
+                .orElseThrow(() -> new RuntimeException("Gate not found"));
+
+        Set<Passenger> passengers = dto.getPassengerIds().stream()
+                .map(passengerId -> passengerRepo.findById(passengerId)
+                        .orElseThrow(() -> new RuntimeException("Passenger not found with ID: " + passengerId)))
+                .collect(Collectors.toSet());
+
+
+        existing.setAircraft(aircraft);
+        existing.setOriginAirport(origin);
+        existing.setDestinationAirport(destination);
+        existing.setAirline(airline);
+        existing.setGate(gate);
+        existing.setPassengers(passengers);
+
+        return flightRepo.save(existing);
+    }
+
 }

@@ -31,11 +31,17 @@ public class AirportService {
     }
 
     public Airport createAirport(Airport airport) {
-        Long cityId = airport.getCity().getId();
-        City city = cityRepository.findById(cityId)
-                .orElseThrow(() -> new RuntimeException("City not found"));
-        airport.setCity(city);
+        resolveCity(airport);
         return airportRepository.save(airport);
+    }
+
+    public Airport updateAirport(Long id, Airport airport) {
+        Airport existing = getAirportById(id);
+        existing.setName(airport.getName());
+        existing.setCode(airport.getCode());
+        resolveCity(airport);
+        existing.setCity(airport.getCity());
+        return airportRepository.save(existing);
     }
 
     public void deleteAirport(Long id) {
@@ -75,9 +81,10 @@ public class AirportService {
                 .build();
     }
 
-    public List<AirportDTO> getAllAirportDTOs() {
-        return airportRepository.findAll().stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+    private void resolveCity(Airport airport) {
+        Long cityId = airport.getCity().getId();
+        City city = cityRepository.findById(cityId)
+                .orElseThrow(() -> new RuntimeException("City not found"));
+        airport.setCity(city);
     }
 }

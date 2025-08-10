@@ -28,6 +28,14 @@ public class CityService {
         return cityRepo.save(city);
     }
 
+    public City updateCity(Long id, City city) {
+        City existing = getCityById(id);
+        existing.setName(city.getName());
+        existing.setState(city.getState());
+        existing.setPopulation(city.getPopulation());
+        return cityRepo.save(existing);
+    }
+
     public void deleteCity(Long id) {
         if (!cityRepo.existsById(id)) {
             throw new RuntimeException("Cannot delete — city not found with ID: " + id);

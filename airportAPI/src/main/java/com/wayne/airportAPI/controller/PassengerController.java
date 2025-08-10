@@ -35,6 +35,14 @@ public class PassengerController {
         return passengerService.toDTO(saved);
     }
 
+    @PutMapping("/{id}")
+    public PassengerDTO updatePassenger(@PathVariable Long id, @Valid @RequestBody PassengerDTO dto) {
+        Passenger passenger = passengerService.fromDTO(dto);
+        Passenger updated = passengerService.updatePassenger(id, passenger);
+        return passengerService.toDTO(updated);
+    }
+
+
     @DeleteMapping("/{id}")
     public void deletePassenger(@PathVariable Long id) {
         passengerService.deletePassenger(id);

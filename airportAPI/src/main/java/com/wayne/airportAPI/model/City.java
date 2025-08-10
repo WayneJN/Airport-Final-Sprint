@@ -24,6 +24,10 @@ public class City {
     @NotBlank(message = "City name is required")
     private String name;
 
+    @NotBlank(message = "Country is required")
+    private String country;
+
+
     @NotBlank(message = "State is required")
     private String state;
 

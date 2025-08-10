@@ -37,6 +37,14 @@ public class AircraftController {
         return aircraftService.toDTO(saved);
     }
 
+    @PutMapping("/{id}")
+    public AircraftDTO updateAircraft(@PathVariable Long id, @Valid @RequestBody AircraftDTO dto) {
+        Aircraft aircraft = aircraftService.fromDTO(dto);
+        Aircraft updated = aircraftService.updateAircraft(id, aircraft);
+        return aircraftService.toDTO(updated);
+    }
+
+
     @DeleteMapping("/{id}")
     public void deleteAircraft(@PathVariable Long id) {
         aircraftService.deleteAircraft(id);

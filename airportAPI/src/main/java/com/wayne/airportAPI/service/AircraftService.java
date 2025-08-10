@@ -36,20 +36,25 @@ public class AircraftService {
     }
 
     public Aircraft createAircraft(Aircraft aircraft) {
-        Set<Airport> resolvedAirports = aircraft.getAirports().stream()
-                .map(a -> airportRepo.findById(a.getId())
-                        .orElseThrow(() -> new RuntimeException("Airport not found")))
-                .collect(Collectors.toSet());
-
-        Set<Passenger> resolvedPassengers = aircraft.getPassengers().stream()
-                .map(p -> passengerRepo.findById(p.getId())
-                        .orElseThrow(() -> new RuntimeException("Passenger not found")))
-                .collect(Collectors.toSet());
-
-        aircraft.setAirports(resolvedAirports);
-        aircraft.setPassengers(resolvedPassengers);
-
+        resolveRelations(aircraft);
         return aircraftRepo.save(aircraft);
+    }
+
+    public Aircraft updateAircraft(Long id, Aircraft aircraft) {
+        Aircraft existing = getAircraftById(id);
+        existing.setModel(aircraft.getModel());
+        existing.setManufacturer(aircraft.getManufacturer());
+        existing.setCapacity(aircraft.getCapacity());
+
+        resolveRelations(aircraft);
+        existing.setAirports(aircraft.getAirports());
+        existing.setPassengers(aircraft.getPassengers());
+
+        return aircraftRepo.save(existing);
+    }
+
+    public void deleteAircraft(Long id) {
+        aircraftRepo.deleteById(id);
     }
 
     public AircraftDTO toDTO(Aircraft aircraft) {
@@ -70,13 +75,18 @@ public class AircraftService {
                 .build();
     }
 
-    public List<AircraftDTO> getAllAircraftDTOs() {
-        return aircraftRepo.findAll().stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
+    private void resolveRelations(Aircraft aircraft) {
+        Set<Airport> resolvedAirports = aircraft.getAirports().stream()
+                .map(a -> airportRepo.findById(a.getId())
+                        .orElseThrow(() -> new RuntimeException("Airport not found")))
+                .collect(Collectors.toSet());
 
-    public void deleteAircraft(Long id) {
-        aircraftRepo.deleteById(id);
+        Set<Passenger> resolvedPassengers = aircraft.getPassengers().stream()
+                .map(p -> passengerRepo.findById(p.getId())
+                        .orElseThrow(() -> new RuntimeException("Passenger not found")))
+                .collect(Collectors.toSet());
+
+        aircraft.setAirports(resolvedAirports);
+        aircraft.setPassengers(resolvedPassengers);
     }
 }
