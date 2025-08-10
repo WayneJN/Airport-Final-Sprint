@@ -47,4 +47,14 @@ public class AirportController {
     public List<Passenger> getPassengersByAirport(@PathVariable Long id) {
         return airportService.getPassengersByAirportId(id);
     }
+
+    @PutMapping("/{id}")
+    public AirportDTO updateAirport(@PathVariable Long id, @Valid @RequestBody AirportDTO dto) {
+        Airport airport = airportService.fromDTO(dto);
+        Airport updated = airportService.updateAirport(id, airport);
+        return airportService.toDTO(updated);
+    }
+
+
+
 }

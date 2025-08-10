@@ -15,41 +15,43 @@ public class PassengerService {
     @Autowired
     private PassengerRepository passengerRepo;
 
-    // Retrieve all passengers as entities
     public List<Passenger> getAllPassengers() {
         return passengerRepo.findAll();
     }
 
-    // Retrieve all passengers as DTOs
     public List<PassengerDTO> getAllPassengerDTOs() {
         return passengerRepo.findAll().stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
-    // Get passenger by ID
     public Passenger getPassengerById(Long id) {
         return passengerRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Passenger not found"));
     }
 
-    // Create passenger from DTO
     public Passenger createPassengerFromDTO(PassengerDTO dto) {
         Passenger passenger = fromDTO(dto);
         return passengerRepo.save(passenger);
     }
 
-    // Create passenger from entity
     public Passenger createPassenger(Passenger passenger) {
         return passengerRepo.save(passenger);
     }
 
-    // Delete passenger by ID
+    public Passenger updatePassenger(Long id, Passenger passenger) {
+        Passenger existing = getPassengerById(id);
+        existing.setFirstName(passenger.getFirstName());
+        existing.setLastName(passenger.getLastName());
+        existing.setEmail(passenger.getEmail());
+        existing.setPassportNumber(passenger.getPassportNumber());
+        return passengerRepo.save(existing);
+    }
+
     public void deletePassenger(Long id) {
         passengerRepo.deleteById(id);
     }
 
-    // Convert DTO to Entity
     public Passenger fromDTO(PassengerDTO dto) {
         return Passenger.builder()
                 .id(dto.getId())
@@ -60,7 +62,6 @@ public class PassengerService {
                 .build();
     }
 
-    // Convert Entity to DTO
     public PassengerDTO toDTO(Passenger passenger) {
         return PassengerDTO.builder()
                 .id(passenger.getId())

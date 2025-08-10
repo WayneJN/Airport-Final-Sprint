@@ -33,6 +33,25 @@ public class CityController {
         return cityService.toDTO(saved);
     }
 
+    @PutMapping("/{id}")
+    public CityDTO updateCity(@PathVariable Long id, @Valid @RequestBody CityDTO dto) {
+        City city = cityService.fromDTO(dto);
+        City updated = cityService.updateCity(id, city);
+        return cityService.toDTO(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCity(@PathVariable Long id) {
+        cityService.deleteCity(id);
+    }
+
+    @GetMapping("/{id}")
+    public CityDTO getCityById(@PathVariable Long id) {
+        City city = cityService.getCityById(id);
+        return cityService.toDTO(city);
+    }
+
+
     @GetMapping("/{id}/airports")
     public Set<Airport> getAirportsByCity(@PathVariable Long id) {
         return cityService.getCityById(id).getAirports();
