@@ -36,10 +36,11 @@ class PassengerControllerTest {
                 .cityId(1L)
                 .build();
 
-        mockMvc.perform(post("/passengers")
+        mockMvc.perform(post("/api/passengers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest());
+
 
     }
 }

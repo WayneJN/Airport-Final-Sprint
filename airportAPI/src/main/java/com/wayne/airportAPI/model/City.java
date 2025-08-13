@@ -27,7 +27,6 @@ public class City {
     @NotBlank(message = "Country is required")
     private String country;
 
-
     @NotBlank(message = "State is required")
     private String state;
 
@@ -37,4 +36,8 @@ public class City {
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Airport> airports;
+
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Passenger> passengers;
 }

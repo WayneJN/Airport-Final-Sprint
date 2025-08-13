@@ -24,12 +24,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+        ex.printStackTrace(); // Log the error
         return new ResponseEntity<>(buildResponse(ex.getMessage(), null), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex) {
-        return new ResponseEntity<>(buildResponse("An unexpected error occurred", null), HttpStatus.INTERNAL_SERVER_ERROR);
+        ex.printStackTrace(); // Log the full stack trace
+        return new ResponseEntity<>(buildResponse(ex.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private Map<String, Object> buildResponse(String message, Object details) {
