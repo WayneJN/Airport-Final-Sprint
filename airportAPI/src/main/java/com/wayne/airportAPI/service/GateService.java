@@ -1,7 +1,9 @@
 package com.wayne.airportAPI.service;
 
 import com.wayne.airportAPI.dto.GateDTO;
+import com.wayne.airportAPI.model.Airport;
 import com.wayne.airportAPI.model.Gate;
+import com.wayne.airportAPI.repository.AirportRepository;
 import com.wayne.airportAPI.repository.GateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 public class GateService {
 
     private final GateRepository gateRepo;
+    private final AirportRepository airportRepo;
 
     public List<GateDTO> getAllGates() {
         return gateRepo.findAll().stream()
@@ -48,12 +51,24 @@ public class GateService {
         return false;
     }
 
+    public Gate fromDTO(GateDTO dto) {
+        Gate gate = new Gate();
+        gate.setId(dto.getId());
+        gate.setGateNumber(dto.getGateNumber());
+
+        Airport airport = airportRepo.findByCode(dto.getAirportCode())
+                .orElseThrow(() -> new RuntimeException("Airport not found with code: " + dto.getAirportCode()));
+
+        gate.setAirport(airport);
+        return gate;
+    }
+
     private GateDTO toDTO(Gate gate) {
         return GateDTO.builder()
                 .id(gate.getId())
                 .gateNumber(gate.getGateNumber())
-                .airportName(gate.getAirport() != null ? gate.getAirport().getName() : null)
-                .airportCode(gate.getAirport() != null ? gate.getAirport().getCode() : null)
+                .airportName(gate.getAirport().getName())
+                .airportCode(gate.getAirport().getCode())
                 .build();
     }
 }

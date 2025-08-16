@@ -49,6 +49,15 @@ public class AirlineService {
         return false;
     }
 
+    public Airline fromDTO(AirlineDTO dto) {
+        return Airline.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .code(dto.getCode())
+                .country(dto.getCountry())
+                .build();
+    }
+
     private AirlineDTO toDTO(Airline airline) {
         return AirlineDTO.builder()
                 .id(airline.getId())

@@ -3,6 +3,7 @@ package com.wayne.airportAPI.controller;
 import com.wayne.airportAPI.dto.GateDTO;
 import com.wayne.airportAPI.model.Gate;
 import com.wayne.airportAPI.service.GateService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/gates")
+@CrossOrigin
 @RequiredArgsConstructor
 public class GateController {
 
@@ -29,13 +31,15 @@ public class GateController {
     }
 
     @PostMapping
-    public ResponseEntity<GateDTO> createGate(@RequestBody Gate gate) {
+    public ResponseEntity<GateDTO> createGate(@Valid @RequestBody GateDTO dto) {
+        Gate gate = gateService.fromDTO(dto);
         GateDTO created = gateService.createGate(gate);
         return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GateDTO> updateGate(@PathVariable Long id, @RequestBody Gate gate) {
+    public ResponseEntity<GateDTO> updateGate(@PathVariable Long id, @Valid @RequestBody GateDTO dto) {
+        Gate gate = gateService.fromDTO(dto);
         return gateService.updateGate(id, gate)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
